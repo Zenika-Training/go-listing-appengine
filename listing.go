@@ -14,11 +14,11 @@ import (
 	"strings"
 )
 
-//go:embed static
-var static embed.FS
+//go:embed assets
+var assets embed.FS
 
 func main() {
-	http.Handle("/static/", http.FileServerFS(static))
+	http.Handle("/assets/", http.FileServerFS(assets))
 	http.HandleFunc("/api/services", getServiceListingAPI)
 	http.HandleFunc("/", getServiceListingHTML)
 
@@ -153,9 +153,9 @@ func transform(services []*appengine.Service) appEngineServicesStruct {
 
 func transformAndDisplay(appEngineServices appEngineServicesStruct, w http.ResponseWriter) {
 	tmpl := template.Must(template.New("listing.gohtml").Funcs(template.FuncMap{
-		// svg inlines a file of static/ so that currentColor follows the theme.
-		"svg": func(name string) (template.HTML, error) {
-			b, err := static.ReadFile("static/" + name)
+		// icon inlines a file of assets/icons/ so that currentColor follows the theme.
+		"icon": func(name string) (template.HTML, error) {
+			b, err := assets.ReadFile("assets/icons/" + name)
 			return template.HTML(b), err
 		},
 	}).ParseFiles("template/listing.gohtml"))

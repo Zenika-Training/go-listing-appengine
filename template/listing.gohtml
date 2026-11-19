@@ -8,26 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
-  <script>
-    document.documentElement.classList.add("js");
-    try {
-      var t = localStorage.getItem("theme");
-      if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
-    } catch (e) {}
-  </script>
-  <link rel="stylesheet" href="/static/style.css">
+  <script src="/assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <header class="top">
     <div class="wrap bar">
       <a class="brand" href="/" aria-label="Zenika Training, accueil">
-        {{ svg "logo.svg" }}
+        {{ icon "logo.svg" }}
       </a>
       <div class="theme">
         <button type="button" id="theme" class="switch" role="switch" aria-checked="false" aria-label="Mode sombre">
           <span class="knob" aria-hidden="true"></span>
-          {{ svg "sun.svg" }}
-          {{ svg "moon.svg" }}
+          {{ icon "sun.svg" }}
+          {{ icon "moon.svg" }}
         </button>
       </div>
     </div>
@@ -43,7 +37,7 @@
 
     <div class="wrap">
     <div class="search" role="search">
-      {{ svg "search.svg" }}
+      {{ icon "search.svg" }}
       <label class="sr" for="q">Rechercher une formation</label>
       <input id="q" type="search" autocomplete="off" placeholder="Rechercher une formation">
     </div>
@@ -67,46 +61,7 @@
     </div>
   </main>
 
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var toggle = document.getElementById("theme");
-      var mq = window.matchMedia("(prefers-color-scheme: dark)");
-      function isDark() { return root.dataset.theme ? root.dataset.theme === "dark" : mq.matches; }
-      function show() { toggle.setAttribute("aria-checked", String(isDark())); }
-      toggle.addEventListener("click", function () {
-        var next = isDark() ? "light" : "dark";
-        // Choosing what the system already gives goes back to following the system.
-        var follow = (next === "dark") === mq.matches;
-        if (follow) delete root.dataset.theme;
-        else root.dataset.theme = next;
-        try {
-          if (follow) localStorage.removeItem("theme");
-          else localStorage.setItem("theme", next);
-        } catch (e) {}
-        show();
-      });
-      mq.addEventListener("change", show);
-      show();
-
-      var items = document.querySelectorAll("#list li[data-name]");
-      var input = document.getElementById("q");
-      var count = document.getElementById("count");
-      var none = document.getElementById("none");
-      function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
-      function filter() {
-        var q = norm(input.value.trim()), n = 0;
-        items.forEach(function (li) {
-          var ok = norm(li.dataset.name).indexOf(q) !== -1;
-          li.hidden = !ok;
-          if (ok) n++;
-        });
-        count.textContent = items.length ? n + " formation" + (n > 1 ? "s" : "") + (q ? " trouvée" + (n > 1 ? "s" : "") : " disponible" + (n > 1 ? "s" : "")) : "";
-        none.hidden = n !== 0 || !items.length;
-      }
-      input.addEventListener("input", filter);
-      filter();
-    })();
-  </script>
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/search.js" defer></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ func TestRender(t *testing.T) {
 	w := httptest.NewRecorder()
 	transformAndDisplay(appEngineServicesStruct{}, w)
 	b := w.Body.String()
-	for _, s := range []string{`class="logo"`, `class="sun"`, `class="moon"`, `href="/static/style.css"`} {
+	for _, s := range []string{`class="logo"`, `class="sun"`, `class="moon"`, `href="/assets/css/style.css"`} {
 		if !strings.Contains(b, s) {
 			t.Errorf("missing %s", s)
 		}

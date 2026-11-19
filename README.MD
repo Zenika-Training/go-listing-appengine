@@ -16,7 +16,7 @@ appears as soon as its service is deployed, and disappears when the service is d
 System): tokens, typography, components and the accessibility rules (RGAA 4 / WCAG 2.1 AA).
 Change `DESIGN.md` first, then the template.
 
-- Header: official Zenika Training logo (SVG `static/logo.svg` taken from https://training.zenika.com/fr, inlined by the template, wordmark in `currentColor` for the dark theme) and theme switch; then a hero with the title.
+- Header: official Zenika Training logo (SVG `assets/icons/logo.svg` taken from https://training.zenika.com/fr, inlined by the template, wordmark in `currentColor` for the dark theme) and theme switch; then a hero with the title.
 - Search: above the "N formations disponibles" count, instant filter on the training name (ignores case and accents), with a live result
   count. Hidden without JavaScript.
 - Topic badge (Cloud & DevOps, Web & Craft, Data & IA, Agilité) guessed from keywords in the
@@ -31,7 +31,7 @@ Change `DESIGN.md` first, then the template.
   reduced motion respected. This is a design baseline, not a conformity claim: audit the pages
   before publishing an accessibility statement.
 - Fonts: Plus Jakarta Sans and Inter from Google Fonts (https), with system fonts as fallback.
-  No image, no other library. Colors are CSS variables at the top of `static/style.css`, defined
+  No image, no other library. Colors are CSS variables at the top of `assets/css/style.css`, defined
   with `light-dark()` (recent browsers, 2024+).
 
 # Run locally

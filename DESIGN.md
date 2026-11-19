@@ -230,7 +230,7 @@ Three modes: **System** (default, follows `prefers-color-scheme`), **Light**, **
 | Primary button | `#BB0012` (hover `#93000B`), white label | `#C8101E` (hover `#E7151F`), white label |
 | Focus ring | `#111827` | `#FFFFFF` |
 
-Implementation: CSS custom properties with `light-dark()` and `color-scheme`; an explicit user choice sets `data-theme="light|dark"` on `<html>`. The choice is applied by an inline script in `<head>` before first paint, so there is no flash. Without JavaScript the page follows the system.
+Implementation: CSS custom properties with `light-dark()` and `color-scheme`; an explicit user choice sets `data-theme="light|dark"` on `<html>`. The choice is applied by a blocking script in `<head>` (`assets/js/theme-init.js`) before first paint, so there is no flash. Without JavaScript the page follows the system.
 
 ## Typography
 
@@ -299,7 +299,7 @@ The interface balances friendly pill curvature for interactive markers with gene
 - **Focus:** visible 3px ring in `focus-ring` with a 3px offset, on the card and on its action (RGAA 10.7).
 
 ### Header
-- **Bar:** `surface-card` background with a hairline bottom edge and a diffuse shadow, content on the 80rem grid. Left: the official Zenika Training logo (SVG from https://training.zenika.com/fr, stored in `static/logo.svg` and inlined by the `svg` template function, 44px high); the wordmark takes `currentColor` so it follows the theme, the red gradient disc and its white glyph never change. The logo is decorative (`aria-hidden`) and the link carries the name "Zenika Training, accueil". Right: the theme switch. The search is not in the bar (see Form Inputs & Search).
+- **Bar:** `surface-card` background with a hairline bottom edge and a diffuse shadow, content on the 80rem grid. Left: the official Zenika Training logo (SVG from https://training.zenika.com/fr, stored in `assets/icons/logo.svg` and inlined by the `icon` template function, 44px high); the wordmark takes `currentColor` so it follows the theme, the red gradient disc and its white glyph never change. The logo is decorative (`aria-hidden`) and the link carries the name "Zenika Training, accueil". Right: the theme switch. The search is not in the bar (see Form Inputs & Search).
 - **Hero:** under the bar, a vertical gradient from `hero` (`#F1EEFF` light, `#1A1F3D` dark) to the canvas; centered `headline-hero` title (-0.04em tracking) and a `body-lg` lead in `text-muted` (4.76:1 on `#F1EEFF`). Purely decorative shapes, if any, are `aria-hidden` and never carry text.
 - **Logo:** keep the proportions (170:60), never recolor the disc, leave clear space of at least half the disc height around it. Contrast: the wordmark uses `text` (16.85:1 light, 15.88:1 dark).
 
