@@ -1,13 +1,14 @@
 (function () {
-  var items = document.querySelectorAll("#list li[data-name]");
-  var input = document.getElementById("q");
-  var count = document.getElementById("count");
-  var none = document.getElementById("none");
-  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  const items = document.querySelectorAll("#list li[data-name]");
+  const input = document.getElementById("q");
+  const count = document.getElementById("count");
+  const none = document.getElementById("none");
+  const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   function filter() {
-    var q = norm(input.value.trim()), n = 0;
-    items.forEach(function (li) {
-      var ok = norm(li.dataset.name).indexOf(q) !== -1;
+    const q = norm(input.value.trim());
+    let n = 0;
+    items.forEach((li) => {
+      const ok = norm(li.dataset.name).indexOf(q) !== -1;
       li.hidden = !ok;
       if (ok) n++;
     });
