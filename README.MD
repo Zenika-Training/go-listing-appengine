@@ -27,5 +27,9 @@ If needed, please read these links:
 
 # Deploy
 
-Not working with the following command:
-`gcloud app deploy --project XX ./app.yaml --version go-listing`
+Automatic: each push on `master` runs the CircleCI job `deploy` (`.circleci/config.yml`),
+which deploys the `default` service of the `zen-formations` project and promotes the new version.
+It uses the `training-deploy-gae` context (`GAE_KEY_FILE_CONTENT`).
+
+Manual:
+`gcloud app deploy --project zen-formations ./app.yaml --version go-listing-XX --promote`

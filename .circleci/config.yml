@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  training-material: zenika-training/training-material@volatile
+
+jobs:
+  deploy:
+    docker:
+      # Même image que le job deploy de l'orb training-material (gcloud + bash)
+      - image: gcr.io/google.com/cloudsdktool/google-cloud-cli:583.0.0-alpine
+    resource_class: small
+    steps:
+      - checkout
+      # Authentifie le compte de service (GAE_KEY_FILE_CONTENT) et sélectionne zen-formations
+      - training-material/configure-gcloud
+      - run:
+          name: Déploiement du service default
+          command: gcloud app deploy app.yaml --version "go-listing-${CIRCLE_SHA1:0:7}" --promote --quiet
+
+workflows:
+  # ponytail: déploiement sur master uniquement, pas de preview par branche
+  # (les versions non promues comptent dans le plafond de 210 versions de zen-formations).
+  deploy:
+    jobs:
+      - deploy:
+          context: training-deploy-gae
+          filters:
+            branches:
+              only: master
