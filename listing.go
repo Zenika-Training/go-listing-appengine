@@ -35,8 +35,13 @@ func getServiceListing(w http.ResponseWriter, r *http.Request) (appEngineService
 	// add CORS headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := context.Background()
-	appengineService, err := appengine.NewService(ctx)
 	var appEngineServices appEngineServicesStruct
+	appengineService, err := appengine.NewService(ctx)
+	if err != nil {
+		log.Print("err creating appengine service ", err)
+		http.Error(w, "service unavailable", http.StatusInternalServerError)
+		return appEngineServices, err
+	}
 	response, err := appengine.NewAppsServicesService(appengineService).List(appName).Do()
 	if err != nil {
 		log.Print("err calling NewAppsServicesService.List", err)

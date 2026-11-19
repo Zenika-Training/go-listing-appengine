@@ -15,15 +15,25 @@ jobs:
       - training-material/configure-gcloud
       - run:
           name: Déploiement du service default
-          command: gcloud app deploy app.yaml --version "go-listing-${CIRCLE_SHA1:0:7}" --promote --quiet
+          command: |
+            if [ "$CIRCLE_BRANCH" = master ]; then
+              # Prod : version promue, https://zen-formations.appspot.com
+              gcloud app deploy app.yaml --version "go-listing-${CIRCLE_SHA1:0:7}" --promote --quiet
+            else
+              # Dev : version non promue, nommée d'après la branche, redéployée à chaque push.
+              # ponytail: le libellé DNS "<version>-dot-zen-formations" est limité à 63 caractères.
+              V="dev-$(echo "$CIRCLE_BRANCH" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g' | cut -c1-40 | sed 's/-*$//')"
+              gcloud app deploy app.yaml --version "$V" --no-promote --quiet
+              echo "Preview : https://$V-dot-zen-formations.appspot.com/"
+            fi
+      # Plafond de 210 versions pour tout zen-formations : purge les versions sans trafic
+      # de plus de 7 jours (la version qui sert la prod n'est jamais supprimée).
+      - training-material/prune-versions:
+          service: default
+          mode: apply
 
 workflows:
-  # ponytail: déploiement sur master uniquement, pas de preview par branche
-  # (les versions non promues comptent dans le plafond de 210 versions de zen-formations).
   deploy:
     jobs:
       - deploy:
           context: training-deploy-gae
-          filters:
-            branches:
-              only: master
