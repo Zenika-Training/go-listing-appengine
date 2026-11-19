@@ -2,7 +2,7 @@ Project listing the services in your current appengine project
 
 # Go
 
-Use the `go 1.13` version.
+Use the `go 1.26` version.
 
 # Install gcloud command
 
