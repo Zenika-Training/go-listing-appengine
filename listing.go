@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"google.golang.org/api/appengine/v1"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
-	"google.golang.org/api/appengine/v1"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 
 func getServiceListing(w http.ResponseWriter, r *http.Request) (appEngineServicesStruct, error) {
 	appName := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	log.Println("appName:"+appName)
+	log.Println("appName:" + appName)
 	// add CORS headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := context.Background()
@@ -77,10 +77,37 @@ type appEngineServicesStruct struct {
 }
 
 type appEngineServiceStruct struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	URL   string `json:"url"`
-	Title string `json:"title"`
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	URL        string `json:"url"`
+	Title      string `json:"title"`
+	Track      string `json:"track,omitempty"` // topic key: cloud, web, data, agile; empty if unknown
+	TrackLabel string `json:"trackLabel,omitempty"`
+}
+
+// tracks maps keywords found in a service ID to a topic (first match wins).
+var tracks = []struct {
+	key, label string
+	keywords   []string
+}{
+	{"data", "Data & IA", []string{"data", "ai", "llm", "claude", "ml", "elastic", "spark", "kafka"}},
+	{"agile", "Agilité", []string{"agile", "scrum", "kanban", "product"}},
+	{"cloud", "Cloud & DevOps", []string{"docker", "podman", "kube", "k8s", "terraform", "ansible", "sre", "cloud", "gcp", "aws", "azure", "devops", "linux", "ci"}},
+	{"web", "Web & Craft", []string{"angular", "react", "vue", "js", "javascript", "typescript", "java", "spring", "go", "git", "test", "clean", "front", "web"}},
+}
+
+func trackOf(id string) (string, string) {
+	words := strings.Split(strings.ToLower(id), "-")
+	for _, t := range tracks {
+		for _, w := range words {
+			for _, k := range t.keywords {
+				if w == k || (len(k) > 3 && strings.HasPrefix(w, k)) {
+					return t.key, t.label
+				}
+			}
+		}
+	}
+	return "", ""
 }
 
 func formatName(name string) string {
@@ -108,11 +135,12 @@ func transform(services []*appengine.Service) appEngineServicesStruct {
 	appEngineServices := appEngineServicesStruct{}
 	for index := range services {
 		appEngineService := appEngineServiceStruct{
-			ID: services[index].Id,
-			Name: services[index].Name,
-			URL: fmt.Sprintf("https://%s-dot-zen-formations.appspot.com/", services[index].Id),
+			ID:    services[index].Id,
+			Name:  services[index].Name,
+			URL:   fmt.Sprintf("https://%s-dot-zen-formations.appspot.com/", services[index].Id),
 			Title: formatName(services[index].Id),
 		}
+		appEngineService.Track, appEngineService.TrackLabel = trackOf(appEngineService.ID)
 		appEngineServices.Services = append(appEngineServices.Services, appEngineService)
 	}
 	return appEngineServices

@@ -12,15 +12,27 @@ appears as soon as its service is deployed, and disappears when the service is d
 
 # The page
 
-`template/listing.gohtml` is self-contained: no external font, image or library.
+`template/listing.gohtml` follows the design rules of [`DESIGN.md`](DESIGN.md) (Zenika Training
+System): tokens, typography, components and the accessibility rules (RGAA 4 / WCAG 2.1 AA).
+Change `DESIGN.md` first, then the template.
 
-- Light and dark themes. It follows the system by default; a **System / Light / Dark** switch
-  lets the user override it. The choice is kept in the browser (`localStorage`). Without
-  JavaScript, the switch is hidden and the page follows the system.
-- Accessibility: AA contrasts in both themes, red used as an accent only (never the only carrier
-  of information), visible keyboard focus, text-size friendly units, reduced motion respected.
-- Colors are CSS variables at the top of the `<style>` block, defined with `light-dark()`
-  (recent browsers, 2024+).
+- Header: official Zenika Training logo (inline SVG taken from https://training.zenika.com/fr, wordmark in `currentColor` for the dark theme) and theme switch; then a hero with the title.
+- Search: above the "N formations disponibles" count, instant filter on the training name (ignores case and accents), with a live result
+  count. Hidden without JavaScript.
+- Topic badge (Cloud & DevOps, Web & Craft, Data & IA, Agilité) guessed from keywords in the
+  service ID by `trackOf` in `listing.go`; no match gives a neutral "Formation" badge. The same
+  `track` and `trackLabel` fields are in the JSON.
+- Themes: light and dark. The page follows the system by default; the sun/moon switch in the
+  header overrides it, and the choice is kept in the browser (`localStorage`). Switching back to
+  the theme the system already uses clears the choice. Without JavaScript, the switch is hidden
+  and the page follows the system.
+- Accessibility: AA contrasts in both themes (ratios listed in `DESIGN.md`), color never the only
+  carrier of information, visible keyboard focus, text sizes in `rem`, reflow down to 320px,
+  reduced motion respected. This is a design baseline, not a conformity claim: audit the pages
+  before publishing an accessibility statement.
+- Fonts: Plus Jakarta Sans and Inter from Google Fonts (https), with system fonts as fallback.
+  No image, no other library. Colors are CSS variables at the top of the `<style>` block, defined
+  with `light-dark()` (recent browsers, 2024+).
 
 # Run locally
 
