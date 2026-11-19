@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"google.golang.org/api/appengine/v1"
@@ -13,7 +14,11 @@ import (
 	"strings"
 )
 
+//go:embed static
+var static embed.FS
+
 func main() {
+	http.Handle("/static/", http.FileServerFS(static))
 	http.HandleFunc("/api/services", getServiceListingAPI)
 	http.HandleFunc("/", getServiceListingHTML)
 
@@ -147,7 +152,13 @@ func transform(services []*appengine.Service) appEngineServicesStruct {
 }
 
 func transformAndDisplay(appEngineServices appEngineServicesStruct, w http.ResponseWriter) {
-	tmpl := template.Must(template.ParseFiles("template/listing.gohtml"))
+	tmpl := template.Must(template.New("listing.gohtml").Funcs(template.FuncMap{
+		// svg inlines a file of static/ so that currentColor follows the theme.
+		"svg": func(name string) (template.HTML, error) {
+			b, err := static.ReadFile("static/" + name)
+			return template.HTML(b), err
+		},
+	}).ParseFiles("template/listing.gohtml"))
 	tc := make(map[string]interface{})
 	tc["Services"] = appEngineServices.Services
 	if err := tmpl.Execute(w, tc); err != nil {
