@@ -1,67 +1,67 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Liste des formations</title>
-  <link href="http://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: Ubuntu, sans-serif;
-      color: white;
-      min-height: 100%;
-    }
-    .container {
-      min-height: 100%;
-      background-color: #8daf1eff;
-      background-image: url(https://jobs.zenika.com/wp-content/uploads/2014/04/row-svg-diamonds.svg);
-      background-size: cover;
-      background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .center {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    a, a:hover, a:visited, a:focus {
-      color: white;
-      text-decoration: none;
-    }
-    ul {
-      width: 100%;
-	  display: flex;
-	  flex-direction: row;
-	  flex-wrap: wrap;
-	}
-	li {
-    list-style: none;
-    display: inline-block;
-    width: calc(100% / 3);
-    height: 120px;
-    text-align: center;
-  }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Formations Zenika</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+  <script src="/assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="center">
-      <h1>Liste des formations Zenika</h1>
+  <header class="top">
+    <div class="wrap bar">
+      <a class="brand" href="/" aria-label="Zenika Training, accueil">
+        {{ icon "logo.svg" }}
+      </a>
+      <div class="theme">
+        <button type="button" id="theme" class="switch" role="switch" aria-checked="false" aria-label="Mode sombre">
+          <span class="knob" aria-hidden="true"></span>
+          {{ icon "sun.svg" }}
+          {{ icon "moon.svg" }}
+        </button>
+      </div>
     </div>
-    <div class="center">
-      <ul>
-      	{{ range $index, $service := .Services }}
-      	{{ if ne $service.ID "default"}}
-        <li><h2><a href="{{ $service.URL }}" target="_NEW">
-        	{{ $service.Title }}
-        </a></h2></li>
-        {{ end }}
-        {{ end }}
-      </ul>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>Se former et développer ses compétences numériques</h1>
+        <p class="lead">Choisissez une formation pour accéder à ses supports.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+    <div class="search" role="search">
+      {{ icon "search.svg" }}
+      <label class="sr" for="q">Rechercher une formation</label>
+      <input id="q" type="search" autocomplete="off" placeholder="Rechercher une formation">
     </div>
-  </div>
+    <p class="count" id="count" role="status" aria-live="polite"></p>
+    <ul id="list">
+      {{ range $service := .Services }}
+      {{ if ne $service.ID "default" }}
+      <li data-name="{{ $service.Title }}">
+        <a class="card" href="{{ $service.URL }}" target="_blank" rel="noopener">
+          {{ if $service.Track }}<span class="badge" data-track="{{ $service.Track }}">{{ $service.TrackLabel }}</span>{{ else }}<span class="badge">Formation</span>{{ end }}
+          <h2 class="title">{{ $service.Title }}</h2>
+          <footer><span class="cta">Voir la formation <span aria-hidden="true">↗</span><span class="sr">(nouvel onglet)</span></span></footer>
+        </a>
+      </li>
+      {{ end }}
+      {{ else }}
+      <li class="none">Aucune formation disponible pour le moment.</li>
+      {{ end }}
+    </ul>
+    <p class="none" id="none" hidden>Aucune formation ne correspond à votre recherche.</p>
+    </div>
+  </main>
+
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/search.js" defer></script>
 </body>
 </html>
