@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Déploiement du service default
           command: |
-            if [ "$CIRCLE_BRANCH" = master ]; then
+            if [ "$CIRCLE_BRANCH" = main ]; then
               # Prod : version promue, https://zen-formations.appspot.com
               gcloud app deploy app.yaml --version "go-listing-${CIRCLE_SHA1:0:7}" --promote --quiet
             else
