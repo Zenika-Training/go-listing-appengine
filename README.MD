@@ -55,11 +55,11 @@ The CircleCI job `deploy` (`.circleci/config.yml`) deploys the `default` service
 
 | Branch | Version | Promoted | URL |
 | --- | --- | --- | --- |
-| `master` | `go-listing-<sha>` | yes (production) | https://training-material.zenika.com/ |
+| `main` | `go-listing-<sha>` | yes (production) | https://training-material.zenika.com/ |
 | any other | `dev-<branch>` | no | `https://dev-<branch>-dot-zen-formations.appspot.com/` |
 
 Workflow: create a branch, push, open the `dev-<branch>` URL (printed in the job log) to
-validate, then merge into `master` to publish.
+validate, then merge into `main` to publish.
 
 Good to know:
 
